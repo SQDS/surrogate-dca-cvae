@@ -1,0 +1,201 @@
+{
+  "status": "PASS",
+  "date": "2026-10-30",
+  "python": "3.10.19",
+  "packages": {
+    "numpy": "2.2.5",
+    "scipy": "1.15.3",
+    "scikit-learn": "1.7.2",
+    "torch": "2.7.1+cu118",
+    "h5py": "3.15.1",
+    "matplotlib": "3.10.7"
+  },
+  "checks": {
+    "requested_architecture": {
+      "status": "PASS",
+      "required_files": 30
+    },
+    "surrogate_subset": {
+      "status": "PASS",
+      "pairs": 11610,
+      "fraction": 0.029489458978917957,
+      "source_records": 210,
+      "complete_selected_records": true,
+      "original_split_membership": true,
+      "exact_source_arrays": true
+    },
+    "clinical_examples": {
+      "status": "PASS",
+      "people": 2,
+      "control_windows": 12,
+      "patient_windows": 5,
+      "complete_selected_analysis_windows": true,
+      "original_ids_and_paths_excluded": true
+    },
+    "weights_models_losses_gradients_inference": {
+      "status": "PASS",
+      "exact_comparisons": [
+        {
+          "variant": "M",
+          "seed": 42,
+          "status": "PASS"
+        },
+        {
+          "variant": "S",
+          "seed": 42,
+          "status": "PASS"
+        },
+        {
+          "variant": "S-Y",
+          "seed": 42,
+          "status": "PASS"
+        },
+        {
+          "variant": "MS",
+          "seed": 42,
+          "status": "PASS"
+        },
+        {
+          "variant": "M",
+          "seed": 43,
+          "status": "PASS"
+        },
+        {
+          "variant": "S",
+          "seed": 43,
+          "status": "PASS"
+        },
+        {
+          "variant": "S-Y",
+          "seed": 43,
+          "status": "PASS"
+        },
+        {
+          "variant": "MS",
+          "seed": 43,
+          "status": "PASS"
+        },
+        {
+          "variant": "M",
+          "seed": 44,
+          "status": "PASS"
+        },
+        {
+          "variant": "S",
+          "seed": 44,
+          "status": "PASS"
+        },
+        {
+          "variant": "S-Y",
+          "seed": 44,
+          "status": "PASS"
+        },
+        {
+          "variant": "MS",
+          "seed": 44,
+          "status": "PASS"
+        },
+        {
+          "variant": "M",
+          "seed": 45,
+          "status": "PASS"
+        },
+        {
+          "variant": "S",
+          "seed": 45,
+          "status": "PASS"
+        },
+        {
+          "variant": "S-Y",
+          "seed": 45,
+          "status": "PASS"
+        },
+        {
+          "variant": "MS",
+          "seed": 45,
+          "status": "PASS"
+        },
+        {
+          "variant": "M",
+          "seed": 46,
+          "status": "PASS"
+        },
+        {
+          "variant": "S",
+          "seed": 46,
+          "status": "PASS"
+        },
+        {
+          "variant": "S-Y",
+          "seed": 46,
+          "status": "PASS"
+        },
+        {
+          "variant": "MS",
+          "seed": 46,
+          "status": "PASS"
+        }
+      ]
+    },
+    "FIR_numerical_parity": "PASS",
+    "TFA_archived_curve_parity": {
+      "status": "PASS",
+      "max_abs_difference": 0.00013330632906871642,
+      "seeds": 5
+    },
+    "LOPO_and_statistics_against_139_person_archive": {
+      "status": "PASS",
+      "people": 139,
+      "exact_OOF_probabilities": true
+    },
+    "two_person_AUC_rejected": "PASS",
+    "demo_CLI": {
+      "status": "PASS",
+      "device": "cpu",
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46
+      ],
+      "clinical_people": 2,
+      "clinical_windows": 17,
+      "surrogate_test_forecast_pairs": 100,
+      "surrogate_test_forecast_sources": 10,
+      "surrogate_MSE89_mean_seed_error": 5.115479358498897e-06,
+      "scope": "Bundled examples only. Full paper results are in results/reference_summary.csv."
+    },
+    "evaluation_CLI": {
+      "status": "PASS",
+      "task": "reconstruction",
+      "split": "test",
+      "pairs": 1650,
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46
+      ],
+      "variants": [
+        "M",
+        "S",
+        "S-Y",
+        "MS"
+      ],
+      "scope": "Supplied dataset only; paper reference results use the full dataset"
+    },
+    "four_configuration_training_smoke": {
+      "status": "PASS",
+      "configurations": 4,
+      "epochs_each": 2,
+      "seed": 42
+    }
+  },
+  "limitations": [
+    "MATLAB generator source was packaged and inspected; MATLAB/Octave is not installed, so it was not executed.",
+    "Full 400-epoch training was not repeated; the original selected tensors were retained.",
+    "Remote download was not exercised because no public release URL has been provided."
+  ]
+}

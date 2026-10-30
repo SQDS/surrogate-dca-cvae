@@ -1,0 +1,59 @@
+{
+  "sampling_seed": 20261030,
+  "surrogate": {
+    "full_pairs": 393700,
+    "included_pairs": 11610,
+    "fraction": 0.029489458978917957,
+    "source_records": 210,
+    "splits": [
+      {
+        "split": "train",
+        "source_records": 150,
+        "pairs": 8310,
+        "full_pairs": 275540,
+        "fraction": 0.03015896058648472
+      },
+      {
+        "split": "val",
+        "source_records": 30,
+        "pairs": 1650,
+        "full_pairs": 59080,
+        "fraction": 0.02792823290453622
+      },
+      {
+        "split": "test",
+        "source_records": 30,
+        "pairs": 1650,
+        "full_pairs": 59080,
+        "fraction": 0.02792823290453622
+      }
+    ],
+    "selection": "Within each original split, randomly select 3% of source records stratified by record window count; retain all windows and ARI 0-9"
+  },
+  "jlu": {
+    "people": 2,
+    "windows": 17,
+    "subjects": [
+      {
+        "person_id": "JLU_control_001",
+        "label": 0,
+        "mean_correlation89": 0.7689596680439333,
+        "mean_mse89": 0.0009067002502686683,
+        "mean_nmse89": 0.4603637132111831,
+        "windows": 12
+      },
+      {
+        "person_id": "JLU_patient_001",
+        "label": 1,
+        "mean_correlation89": 0.90902400992215,
+        "mean_mse89": 0.0002856928563818697,
+        "mean_nmse89": 0.19691004458051845,
+        "windows": 5
+      }
+    ],
+    "selection": "Highest participant mean same-window Pearson correlation on samples 11:100 under the five frozen MS-aux models; average seeds, windows within side, then sides; lower variance-normalized MSE breaks ties. Repeated-visit participant omitted for a single-record demo.",
+    "interpretation": "Curated favorable illustrations; not an unbiased evaluation cohort or an AUC estimate."
+  },
+  "units": "ABP and CBFV are dimensionless relative perturbations; step is in training-standardized output/input units",
+  "contact": "hx.yang2@siat.ac.cn"
+}

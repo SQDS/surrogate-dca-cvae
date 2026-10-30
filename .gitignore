@@ -1,0 +1,27 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+.DS_Store
+outputs/
+runs/
+work/
+*.log
+*.tmp
+*.part
+.env
+.env.*
+# Data inclusion is an allowlist. Do not add complete clinical archives here.
+data/*
+!data/README.md
+!data/schema.json
+!data/demo/
+data/demo/*
+!data/demo/surrogate_demo.npz
+!data/demo/jlu_demo.npz
+!data/demo/jlu_selection.csv
+!data/demo/selection_manifest.json
+private/
+raw/
+*.zip

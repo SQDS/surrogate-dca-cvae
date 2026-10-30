@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "Please cite this software when using the implementation. Contact hx.yang2@siat.ac.cn for the manuscript citation."
+type: software
+repository-code: "https://github.com/SQDS/surrogate-dca-cvae"
+title: "Surrogate dCA CVAE: pressure–flow modeling and evaluation"
+authors:
+  - name: "Surrogate dCA CVAE contributors"
+    email: "hx.yang2@siat.ac.cn"
+version: "0.1.0"
+date-released: "2026-10-30"
+license: MIT
+abstract: "Four matched neural configurations trained on surrogate pressure–flow data, with frozen clinical inference. Companion to the manuscript Toward Digital Twin–Enabled Assessment of Dynamic Cerebral Autoregulation: Learning From Surrogate Pressure–Flow Data."

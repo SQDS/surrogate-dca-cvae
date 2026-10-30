@@ -1,0 +1,7 @@
+# Validated with Python 3.10.19; CPU inference works without CUDA.
+numpy==2.2.5
+scipy==1.15.3
+scikit-learn==1.7.2
+torch==2.7.1
+h5py==3.15.1
+matplotlib==3.10.7

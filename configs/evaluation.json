@@ -1,0 +1,202 @@
+{
+  "protocol_id": "cvae_step_ablation_v2_20261013",
+  "split": {
+    "seed": 20260924,
+    "records": [
+      4976,
+      1067,
+      1067
+    ],
+    "windows": [
+      27554,
+      5908,
+      5908
+    ],
+    "pairs": [
+      275540,
+      59080,
+      59080
+    ]
+  },
+  "forecasting": {
+    "calibration_segments": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "target_segment": 8,
+    "calibration_starts": [
+      0,
+      50,
+      100,
+      150,
+      200
+    ],
+    "target_start": 350,
+    "score_slice": [
+      11,
+      100
+    ],
+    "center_slice": [
+      25,
+      75
+    ],
+    "data_version": "existing_windowwise_simulation",
+    "initial_state": "zero restart per 100s simulated window",
+    "history": "no_cross_window_history",
+    "neural_aggregate": "decode each calibration mu on target ABP then average outputs",
+    "fir_taps": 12,
+    "fir_ridge": 0.0001,
+    "TFA_lambda_candidates": [
+      0.0,
+      0.0001,
+      0.001,
+      0.01,
+      0.1,
+      1.0
+    ],
+    "TFA": "100 point periodic Fourier synthesis; target ABP unwindowed/demeaned; DC=calibration CBFV mean; real Nyquist"
+  },
+  "clinical": {
+    "people": 139,
+    "control": 68,
+    "stroke": 71,
+    "side_policy": "frozen curated side list",
+    "inference": "per-window mu -> spectra-averaged probe curve -> side -> visit -> person",
+    "classifier_order": "visit frequency curve -> visit bands -> merge visits -> LOPO",
+    "classifier": {
+      "C": 1.0,
+      "penalty": "l2",
+      "solver": "lbfgs",
+      "tol": 0.0001,
+      "max_iter": 5000,
+      "random_state": 42
+    },
+    "imputation": "training-fold G/C medians; P circular mean; drop all-missing/undefined columns in that fold",
+    "ensemble": "average five complete OOF probabilities",
+    "coherence": "v2: no additive offset; invalid PSD -> NaN",
+    "gain_input": "relative output/input",
+    "display_units": [
+      "relative",
+      "standardized"
+    ],
+    "identity_policy": "person_ids must merge repeated visits before leave-one-person-out classification"
+  },
+  "statistics": {
+    "bootstrap": 10000,
+    "bootstrap_seed": 20261013,
+    "MSE_unit": "paired source records",
+    "MSE_primary": [
+      [
+        "MS-aux",
+        "T"
+      ],
+      [
+        "MS-aux",
+        "M"
+      ],
+      [
+        "MS-aux",
+        "S-Y"
+      ]
+    ],
+    "MSE_p_values": false,
+    "AUC_unit": "paired class-stratified people, fixed OOF, no refitting",
+    "AUC_primary": [
+      [
+        "MS-aux_GP6",
+        "T_GPC9"
+      ],
+      [
+        "MS-aux_GP6",
+        "M_GP6"
+      ],
+      [
+        "MS-aux_GP6",
+        "S-Y_GP6"
+      ]
+    ],
+    "AUC_secondary": [
+      [
+        "MS-aux_GP6",
+        "T_GP6"
+      ],
+      [
+        "MS-aux_GP6",
+        "S_GP6"
+      ],
+      [
+        "MS-aux_GP6",
+        "F_GP6"
+      ],
+      [
+        "MS-aux_GP6",
+        "MS-main_GP6"
+      ],
+      [
+        "MS-main_GP6",
+        "M_GP6"
+      ],
+      [
+        "S_GP6",
+        "F_GP6"
+      ]
+    ],
+    "Holm_families": {
+      "primary_auc": 3,
+      "secondary_auc": 6
+    },
+    "CI": [
+      0.95,
+      0.9833333333333333
+    ],
+    "AUC_significance": "two-sided Holm p<.05 within declared family",
+    "missing_comparison": "retain planned family size; uncomputable p remains NA"
+  },
+  "phase2": {
+    "calibration": [
+      0,
+      150
+    ],
+    "target": [
+      200,
+      300
+    ],
+    "shift": 0,
+    "normalization": "calibration means only",
+    "detrend": "no full-record or target-fitted detrend",
+    "lowpass_hz": 0.5,
+    "filter_order": 3,
+    "fs_raw": 100,
+    "fs_target": 1,
+    "filter_segments": "calibration and target independently",
+    "score_slice": [
+      11,
+      100
+    ],
+    "reuse_selected_checkpoints": true
+  },
+  "tfa": {
+    "protocol_id": "ablation_v2_per_window_mu_coherence_no_offset",
+    "fs": 1.0,
+    "nfft": 100,
+    "window": "hann",
+    "detrend": "constant",
+    "coherence_offset": 0.0,
+    "h_floor": 1e-12,
+    "invalid_coherence": "NaN; no global imputation",
+    "phase": "degrees and circular averages",
+    "latent_aggregation": "decode each window mu separately, then aggregate curves within side",
+    "spectral_aggregation": "five probe-window spectra averaged before H/G/P/C; traditional all real windows per side",
+    "gain": "relative output/input; standardized display derived by common scale conversion",
+    "bands": {
+      "VLF": "[.02,.07)",
+      "LF": "[.07,.20)",
+      "HF": "[.20,.50]"
+    },
+    "nyquist": "RMS-matched cosine; historical inclusion",
+    "missing_curve_aggregation": "strict arithmetic/circular aggregation; invalid values propagate to fold-only imputation"
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "variants": [
+    "M",
+    "S",
+    "S-Y",
+    "MS"
+  ],
+  "seeds": [
+    42,
+    43,
+    44,
+    45,
+    46
+  ],
+  "model": {
+    "hidden": [
+      150,
+      150,
+      500
+    ],
+    "aux_hidden": [
+      50,
+      50,
+      100
+    ],
+    "z_dim": 30,
+    "alpha": 0.5,
+    "beta": 0.001,
+    "epsilon_scale": 1.0
+  },
+  "scaler": {
+    "type": "global_zscore",
+    "fit_split": "train_mask_from_split_npz",
+    "axis": "all_train_samples_and_timepoints",
+    "eps": 1e-06,
+    "signals": {
+      "abp": {
+        "mean": -0.01145466597048033,
+        "std": 0.039566078740869697
+      },
+      "cbv": {
+        "mean": -1.7933358265140376e-05,
+        "std": 0.03196156442119214
+      }
+    },
+    "note": "ABP/CBV are z-score normalized with statistics fit only on the training split."
+  },
+  "training": {
+    "epochs": 400,
+    "batch_size": 512,
+    "lr": 0.0001,
+    "adam_betas": [
+      0.9,
+      0.999
+    ],
+    "adam_eps": 1e-08,
+    "weight_decay": 0.0,
+    "checkpoint_every": 10,
+    "warmup_epochs": 10,
+    "early_stopping": false,
+    "amp": false,
+    "tf32": false,
+    "loss_training": "same-window stochastic z; one draw per branch reused across decoders",
+    "random_streams": "SHA256 positive int63 keyed by seed, epoch, shuffle/main/aux; complete-epoch noise arrays aligned to common batch order",
+    "validation": "deterministic mu cross-window relative MSE89, ARI equal within source, sources equal",
+    "MS_selection_path": "MS-aux",
+    "tie_break": "earlier saved epoch"
+  }
+}

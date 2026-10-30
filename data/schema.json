@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0.0",
+  "container": "NumPy compressed NPZ; load with allow_pickle=false",
+  "time_axis": {"sampling_hz": 1, "window_samples": 100, "window_seconds": 100, "stride_seconds": 50},
+  "common_arrays": {
+    "abp": {"shape": ["N", 100], "dtype": "float32", "unit": "dimensionless relative pressure perturbation", "required": true},
+    "cbv": {"shape": ["N", 100], "dtype": "float32", "unit": "dimensionless relative CBFV perturbation", "required": true},
+    "step": {"shape": ["N", 12], "dtype": "float32", "unit": "cumulative FIR in frozen training-standardized coordinates", "required": false, "if_omitted": "Computed from standardized abp and cbv with 12 taps, ridge=0.0001"},
+    "fs_hz": {"shape": [], "dtype": "float32", "value": 1, "required": true},
+    "window_start_sec": {"shape": ["N"], "dtype": "int64", "unit": "relative seconds within source recording"}
+  },
+  "surrogate_arrays": {
+    "source_record_id": {"shape": ["N"], "dtype": "int64", "required": true, "meaning": "Source recording grouping key; must not cross splits"},
+    "segment": {"shape": ["N"], "dtype": "int64", "required": true, "meaning": "One-based window index"},
+    "ari": {"shape": ["N"], "dtype": "int64", "required": true, "allowed_values": [0,1,2,3,4,5,6,7,8,9]},
+    "split": {"shape": ["N"], "dtype": "Unicode", "required": true, "allowed_values": ["train", "val", "test"]},
+    "source_row": {"shape": ["N"], "dtype": "int64", "required": false, "meaning": "Zero-based source-array row retained for subset provenance"}
+  },
+  "clinical_arrays": {
+    "person_ids": {"shape": ["N"], "dtype": "Unicode", "required": true, "meaning": "Anonymized participant ID; repeated visits must use the same ID"},
+    "record_ids": {"shape": ["N"], "dtype": "Unicode", "required": true, "meaning": "Anonymized acquisition/visit ID"},
+    "labels": {"shape": ["N"], "dtype": "int64", "required": true, "values": {"0": "control", "1": "patient"}},
+    "sides": {"shape": ["N"], "dtype": "Unicode", "required": true, "allowed_values": ["L", "R"]},
+    "window_start_sec": {"shape": ["N"], "dtype": "int64", "required": true},
+    "segment": {"shape": ["N"], "dtype": "int64", "required": false}
+  },
+  "constraints": [
+    "Signal arrays must be finite and use the documented relative units, not physical units or already z-scored values.",
+    "All surrogate rows from the same source record must belong to one split.",
+    "Every included surrogate pressure window retains exactly ARI 0 through 9.",
+    "Clinical labels are constant within a participant; side and visit aggregation precedes LOPO classification.",
+    "Model inference uses the frozen train-only scaler from configs/models.json.",
+    "The two-person JLU demo supports reconstruction and TFA, not AUC estimation."
+  ],
+  "data_access_contact": "hx.yang2@siat.ac.cn"
+}
