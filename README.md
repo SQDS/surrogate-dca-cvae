@@ -84,34 +84,6 @@ The MATLAB generator accepts explicit input/output directories and requires the 
 generate_surrogate(100, '/path/to/source_abp', '/path/to/generated_output')
 ```
 
-## Reference results and interpretation
-
-The following clinical results use all **139 participants** and are from manuscript Tables 1 and 2. GP6 contains gain and phase in three frequency bands; GPC9 additionally contains coherence.
-
-| Method | Features | AUC | 95% CI |
-|---|---|---:|---|
-| Spectral TFA | GPC9 | 0.9145 | [0.8596, 0.9600] |
-| Spectral TFA | GP6 | 0.8863 | [0.8250, 0.9393] |
-| Window-wise FIR | GP6 | 0.9316 | [0.8807, 0.9712] |
-| Waveform CVAE | GP6 | 0.6553 | [0.5638, 0.7419] |
-| Step VAE | GP6 | 0.8913 | [0.8335, 0.9420] |
-| Step VAE + waveform decoder | GP6 | 0.9451 | [0.9024, 0.9785] |
-| Joint (waveform latent) | GP6 | 0.7564 | [0.6703, 0.8364] |
-| Joint (step latent) | GP6 | **0.9515** | [0.9111, 0.9832] |
-
-Joint (step latent) exceeded Waveform CVAE, while superiority to conventional TFA or Step VAE + waveform decoder was not established. Against TFA GPC9, the paired AUC difference was 0.0371 (95% CI, −0.0193 to 0.0978; Holm-adjusted p = 0.3678).
-
-The surrogate waveform experiments use the following test sets:
-
-| Experiment | Full evaluation set | Joint (step latent) MSE | Spectral TFA MSE |
-|---|---|---:|---:|
-| Surrogate same-window reconstruction | 59,080 pairs from 1,067 test sources | 22.009 × 10⁻⁶ | Not the independent-window TFA comparison |
-| Surrogate independent-window prediction | 3,540 ARI-specific targets from 354 test sources | 9.810 × 10⁻⁶ | 7.687 × 10⁻⁶ |
-
-Surrogate prediction MSE averages the five models' errors, with equal source-record weighting. The surrogate prediction experiment found no error advantage over TFA. Clinical AUC and surrogate waveform MSE assess different outcomes.
-
-Full reference tables are in [results/](results/README.md), including machine-readable versions of manuscript Tables 1 and 2. These are archived full-experiment results; the small included datasets are for running examples.
-
 ## Data convention
 
 Clinical examples are already preprocessed 100-point ABP–CBFV windows at 1 Hz. Clinical relative normalization uses the complete-record mean; surrogate simulation uses each raw pressure window's mean. The frozen training-set means and SDs in `configs/models.json` provide the subsequent global standardization.
