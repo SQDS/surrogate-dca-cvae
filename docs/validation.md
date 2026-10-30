@@ -1,6 +1,6 @@
 # Release validation
 
-The packaged release was checked on 2026-10-30 using Python 3.10.19 and the dependencies listed in `requirements.txt`. Exact versions and machine-readable checks are in [validation.json](validation.json).
+The initial packaged release was checked on 2026-10-30 using Python 3.10.19 and the dependencies listed in `requirements.txt`. Exact versions and the initial machine-readable checks are in [validation.json](validation.json). The later manuscript-alignment revision is covered separately by [manuscript_alignment_validation.json](manuscript_alignment_validation.json).
 
 - All requested architecture entries exist. Runtime Python imports resolve within this repository and the installed dependencies.
 - The surrogate example contains 11,610 exact source pairs from 210 complete records. All ARI variants, windows and original split assignments are retained; no source record crosses splits.
@@ -14,3 +14,11 @@ The packaged release was checked on 2026-10-30 using Python 3.10.19 and the depe
 The MATLAB generator was inspected and packaged with its internal helper functions, but was not executed because MATLAB/Octave is unavailable in the validation environment. Full 400-epoch training was not repeated. Weight download verification was exercised on the bundled files; remote downloading was not exercised because no public release URL is configured.
 
 `checksums.sha256` lists the final shipped files. The distribution archive excludes local runs, optimizer checkpoints, caches, full clinical data and private identity mappings.
+
+## Manuscript-alignment revision
+
+The author-supplied DOCX was read directly, and the displayed values in both manuscript tables were compared with the archived analysis tables. All AUCs, confidence bounds, prediction MSEs and seed SDs matched. Model parameter counts, selected epoch ranges and training settings also matched. The neural checkpoints and demonstration arrays were not changed.
+
+Generated README preview figures were removed. The clinical evaluation entry point now includes the directly fitted FIR comparator and the manuscript's exploratory feature designs. Primary paired AUC and prediction-MSE reports include 98.33% intervals, and seed SD is separated from bootstrap uncertainty. Input checks enforce bilateral controls and one preselected ipsilateral side for each stroke recording.
+
+Validation of the changes comprised all 44 clinical designs on the archived 139-person feature table, including exact agreement in AUC/CI/Holm results; direct calculation of all 139 participants' FIR features; a six-person real-window CLI execution check; and all 20 models on the bundled surrogate test subset. The full clinical neural feature extraction and 400-epoch training were not rerun. The six-person check is an execution test, not a new scientific result. Private participant data used for validation remain outside the repository.

@@ -1,0 +1,6 @@
+method,path,AUC,CI95_low,CI95_high,prediction_MSE_x1e6,seed_SD_x1e6,clinical_people,prediction_sources,prediction_targets,seeds
+Waveform CVAE,M,0.6553,0.5638,0.7419,70.560,10.287,139,354,3540,5
+Step VAE,S,0.8913,0.8335,0.9420,4.818,0.017,139,354,3540,5
+Step VAE + waveform decoder,S-Y,0.9451,0.9024,0.9785,9.318,0.287,139,354,3540,5
+Joint (waveform latent),MS-main,0.7564,0.6703,0.8364,10.805,0.455,139,354,3540,5
+Joint (step latent),MS-aux,0.9515,0.9111,0.9832,9.810,0.326,139,354,3540,5

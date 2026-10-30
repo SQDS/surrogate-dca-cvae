@@ -6,15 +6,21 @@ from .statistics import aggregate
 FREQ = np.round(np.arange(.02, .501, .01), 2)
 
 
-def participant_curves(data, net=None, path='MS-aux', device='cpu'):
+def participant_curves(data, net=None, path='MS-aux', device='cpu', baseline='T'):
     """Return person curves and visit-first band features in relative gain units."""
     from .models import encode_arrays
     from .fir import step_to_fir
     from ._io import config
     keys = sorted(set(zip(data['labels'].tolist(), data['person_ids'].tolist())))
-    if net is None:
+    if net is None and baseline == 'T':
         px, py, pc = spectra(data['abp'], data['cbv'])
         window_curves = None
+    elif net is None and baseline == 'F':
+        # The manuscript's window-wise FIR comparator uses the directly fitted
+        # coefficients, before neural step reconstruction.
+        window_curves = fir_curves(step_to_fir(data['step']))
+    elif net is None:
+        raise ValueError('Clinical baseline must be T (spectral TFA) or F (window-wise FIR)')
     else:
         branch = 'main' if path in ['M', 'MS-main'] else 'auxiliary'
         mu, _ = encode_arrays(net, data['y_z'], data['x_z'], data['step'], branch, device)
@@ -24,6 +30,7 @@ def participant_curves(data, net=None, path='MS-aux', device='cpu'):
             window_curves = fir_curves(step_to_fir(steps))
         else:
             window_curves = neural_curves(net, mu, device)
+    if window_curves is not None:
         signals = config()['scaler']['signals']
         window_curves[..., 0] *= signals['cbv']['std'] / signals['abp']['std']
     person_curves, person_bands = [], []
@@ -35,7 +42,7 @@ def participant_curves(data, net=None, path='MS-aux', device='cpu'):
             side_curves = []
             for side in sorted(set(data['sides'][rm])):
                 sm = rm & (data['sides'] == side)
-                if net is None:
+                if window_curves is None:
                     curve = v2_spectra(px[sm].mean(0), py[sm].mean(0), pc[sm].mean(0))[2:]
                 else:
                     curve = aggregate(window_curves[sm], axis=0)

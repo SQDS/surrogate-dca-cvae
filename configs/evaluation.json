@@ -63,7 +63,7 @@
     "people": 139,
     "control": 68,
     "stroke": 71,
-    "side_policy": "frozen curated side list",
+    "side_policy": "controls: average left and right; stroke: symptom-ipsilateral side only; input side selection must be curated before inference",
     "inference": "per-window mu -> spectra-averaged probe curve -> side -> visit -> person",
     "classifier_order": "visit frequency curve -> visit bands -> merge visits -> LOPO",
     "classifier": {
@@ -176,7 +176,10 @@
       11,
       100
     ],
-    "reuse_selected_checkpoints": true
+    "reuse_selected_checkpoints": true,
+    "people": 137,
+    "scope": "supplementary measured-CBFV prediction; separate raw-data preparation from the 139-person classification task",
+    "availability": "archived aggregate results included; raw clinical prediction pipeline is not exposed by scripts/evaluate.py"
   },
   "tfa": {
     "protocol_id": "ablation_v2_per_window_mu_coherence_no_offset",

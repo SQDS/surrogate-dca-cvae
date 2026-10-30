@@ -2,7 +2,18 @@
 
 Code, 20 frozen model checkpoints, and small example datasets for **Toward Digital Twin–Enabled Assessment of Dynamic Cerebral Autoregulation: Learning From Surrogate Pressure–Flow Data**.
 
-The model learns from recorded arterial blood pressure (ABP) paired with Tiecks-simulated cerebral blood flow velocity (CBFV). Frozen encoders characterize measured recordings, and decoders generate responses to prescribed pressure probes. The four matched configurations are M (waveform CVAE), S (step VAE), S-Y (step VAE plus waveform decoder), and MS (joint model). MS-main and MS-aux are two inference routes through the same MS weights.
+The study uses recorded arterial blood pressure (ABP) to drive the Tiecks simulator and generate surrogate cerebral blood flow velocity (CBFV). A waveform conditional variational autoencoder is coupled to a step-response variational autoencoder. After surrogate-only training and checkpoint selection, frozen models encode measured clinical recordings and generate responses to prescribed sinusoidal ABP probes. Clinical evaluation uses participant-level stroke/control classification. Separate experiments assess CBFV reconstruction and independent-window prediction.
+
+## Models and study protocol
+
+| Manuscript configuration | Code name | Parameters | Frozen inference route |
+|---|---|---:|---|
+| Waveform CVAE | `M` | 336,760 | Waveform latent |
+| Step VAE | `S` | 25,672 | Reconstructed step converted to FIR coefficients |
+| Step VAE + waveform decoder | `S-Y` | 204,072 | Step latent |
+| Joint CVAE–Step VAE | `MS` | 362,432 | `MS-main`: waveform latent; `MS-aux`: step latent |
+
+All four configurations use seeds 42–46, giving 20 separately trained models. The two joint-model routes share the same MS weights. The full surrogate dataset contains 39,370 pressure windows and 393,700 ABP–CBFV pairs, split 70%/15%/15% by source record. The clinical classification cohort contains 68 controls and 71 patients with stroke, with all windows, sides and visits of a participant held out together. Neural weights remain frozen; the downstream classifier uses clinical labels within each training fold.
 
 ## Included data
 
@@ -19,7 +30,7 @@ JLU examples were selected for favorable same-window reconstruction using the fi
 
 ## Install and run
 
-Use Python 3.10 or later. The pinned environment was checked with Python 3.10.19; the default demo runs on CPU.
+The pinned environment was checked with Python 3.10.19; the default demo runs on CPU. The manuscript's full training runs used PyTorch 2.7.1 with CUDA 11.8 on Tesla V100 GPUs.
 
 ```bash
 git clone https://github.com/SQDS/surrogate-dca-cvae.git
@@ -31,11 +42,7 @@ python scripts/download_weights.py
 python scripts/run_demo.py
 ```
 
-The demo writes `outputs/demo/jlu_reconstruction.png`, `jlu_tfa.png`, numerical tables, and `run.json`. It runs all five MS seeds, conventional TFA, model sinusoidal probes, and a surrogate cross-window forecast. It does not update the frozen weights.
-
-![Curated JLU reconstruction examples](docs/demo_reconstruction.png)
-
-The plot shows a window near the median reconstruction correlation within each selected participant. The shaded first 11 samples are excluded from the reported MSE and correlation. The displayed prediction averages the five seed outputs; tabulated metrics average the five individual-model scores. [TFA preview](docs/demo_tfa.png).
+The demo runs the two clinical examples through frozen MS models and TFA, plus a surrogate independent-window prediction example. It writes numerical outputs and inspection plots under `outputs/demo/`. Those plots are generated examples, not manuscript figures.
 
 ```bash
 # All four configurations and five seeds, on the bundled surrogate test subset.
@@ -54,6 +61,8 @@ python scripts/evaluate.py --task classification --data data/private/jlu_full.np
 ```
 
 `train_models.py` defaults to 400 epochs, four configurations, and seeds 42–46. Checkpoint selection uses validation cross-window relative MSE on samples 11:100; the earlier saved epoch wins exact ties. There is no early stopping in this release's four-configuration protocol. Training on the example subset cannot reproduce results from the full dataset. The supplied weights are the original selected model tensors, repackaged without optimizer history.
+
+The classification command includes spectral TFA, directly fitted FIR and the selected neural configurations. GP6 supports the main comparisons; gain-only, phase-only, band-specific and feature-fusion analyses are marked exploratory. See [reproduction scope](docs/reproduction_scope.md) for the mapping between commands and manuscript analyses, including the separate 137-person prediction task.
 
 ## Layout
 
@@ -77,9 +86,38 @@ generate_surrogate(100, '/path/to/source_abp', '/path/to/generated_output')
 
 ## Reference results and interpretation
 
-`results/reference_summary.csv` contains the full-experiment reference values. Joint MS-aux GP6 AUC is 0.9515, compared with 0.9145 for conventional TFA GPC9; the paired comparison did not establish superiority. The bundled examples are smaller than the original 139-person cohort and 59,080-pair surrogate test set. Their computed values must not be reported as the full paper results.
+The following full-cohort clinical results are from manuscript Tables 1 and 2. GP6 contains gain and phase in three frequency bands; GPC9 additionally contains coherence.
 
-Signals are dimensionless relative perturbations, sampled at 1 Hz in 100-point windows. The frozen training-only global scaler is stored in `configs/models.json`. The auxiliary input is a 12-point cumulative FIR response in standardized coordinates. TFA gain is exported in relative output/input units, and phase is in degrees. See [data schema](data/schema.json) and [model card](docs/model_card.md).
+| Method | Features | AUC | 95% CI |
+|---|---|---:|---|
+| Spectral TFA | GPC9 | 0.9145 | [0.8596, 0.9600] |
+| Spectral TFA | GP6 | 0.8863 | [0.8250, 0.9393] |
+| Window-wise FIR | GP6 | 0.9316 | [0.8807, 0.9712] |
+| Waveform CVAE | GP6 | 0.6553 | [0.5638, 0.7419] |
+| Step VAE | GP6 | 0.8913 | [0.8335, 0.9420] |
+| Step VAE + waveform decoder | GP6 | 0.9451 | [0.9024, 0.9785] |
+| Joint (waveform latent) | GP6 | 0.7564 | [0.6703, 0.8364] |
+| Joint (step latent) | GP6 | **0.9515** | [0.9111, 0.9832] |
+
+Joint (step latent) exceeded Waveform CVAE, while superiority to conventional TFA or Step VAE + waveform decoder was not established. Against TFA GPC9, the paired AUC difference was 0.0371 (95% CI, −0.0193 to 0.0978; Holm-adjusted p = 0.3678).
+
+The waveform experiments use different evaluation populations:
+
+| Experiment | Full evaluation set | Joint (step latent) MSE | Spectral TFA MSE |
+|---|---|---:|---:|
+| Surrogate same-window reconstruction | 59,080 pairs from 1,067 test sources | 22.009 × 10⁻⁶ | Not the independent-window TFA comparison |
+| Surrogate independent-window prediction | 3,540 ARI-specific targets from 354 test sources | 9.810 × 10⁻⁶ | 7.687 × 10⁻⁶ |
+| Supplementary measured-CBFV prediction | 137 participants | 0.004534 | 0.004316 |
+
+Prediction MSE averages the five models' errors, with equal source or participant weighting. The study found no CBFV-prediction error advantage over TFA. Clinical AUC and waveform MSE assess different outcomes.
+
+Full reference tables are in [results/](results/README.md), including machine-readable versions of manuscript Tables 1 and 2. These are archived full-experiment results; the small included datasets are for running examples.
+
+## Data convention
+
+Clinical examples are already preprocessed 100-point ABP–CBFV windows at 1 Hz. Clinical relative normalization uses the complete-record mean; surrogate simulation uses each raw pressure window's mean. The frozen training-set means and SDs in `configs/models.json` provide the subsequent global standardization.
+
+The auxiliary input is the cumulative response of a 12-coefficient ridge FIR model fitted in standardized coordinates. TFA gain is reported as relative CBFV/relative ABP (%/%), and phase in degrees. Controls contribute bilateral averages; stroke recordings use only the symptom-ipsilateral side. See [data schema](data/schema.json) and [model card](docs/model_card.md).
 
 ## License and citation
 
@@ -87,4 +125,4 @@ Code is released under the [MIT License](LICENSE), selected by the author for th
 
 ## 中文快速说明
 
-已按 `github架构.txt` 整理。包含模拟数据 **2.95%**、JLU 正常与患者**各一人**、四配置五种子的 **20 个正式权重**。运行 `python scripts/run_demo.py` 即可生成示例重建图和 TFA 图。完整真实数据请联系 **hx.yang2@siat.ac.cn**。示例选取依据、实际比例和运行验证记录均随包提供。
+本仓库按论文的方法、比较设置和结果组织。包含模拟数据 **2.95%**、JLU 正常人和卒中患者**各一人**、四配置五种子的 **20 个正式权重**。论文的139人临床分类、模拟数据预测和137人实测血流预测是不同任务，结果分别列明。完整真实数据请联系 **hx.yang2@siat.ac.cn**。

@@ -44,9 +44,23 @@ def load_dataset(path):
         for k in ['person_ids', 'record_ids', 'labels', 'sides', 'window_start_sec']:
             if k not in data or data[k].shape != (n,):
                 raise ValueError('Missing or invalid clinical field: ' + k)
+        if not set(data['labels'].tolist()) <= {0, 1}:
+            raise ValueError('Clinical labels must be 0 (control) or 1 (stroke)')
+        if not set(data['sides'].tolist()) <= {'L', 'R'}:
+            raise ValueError('Clinical sides must be L or R')
         for person in np.unique(data['person_ids']):
             if len(np.unique(data['labels'][data['person_ids'] == person])) != 1:
                 raise ValueError('Inconsistent labels for the same participant')
+        for record in np.unique(data['record_ids']):
+            mask = data['record_ids'] == record
+            if len(np.unique(data['person_ids'][mask])) != 1:
+                raise ValueError('A record ID cannot belong to multiple participants')
+            sides = set(data['sides'][mask].tolist())
+            label = int(data['labels'][mask][0])
+            if label == 0 and sides != {'L', 'R'}:
+                raise ValueError('The manuscript protocol requires bilateral control recordings')
+            if label == 1 and len(sides) != 1:
+                raise ValueError('Select only the symptom-ipsilateral side of each stroke recording before inference')
     else:
         raise ValueError('Expected surrogate source_record_id or clinical person_ids')
     xz, yz = normalize(x, y)

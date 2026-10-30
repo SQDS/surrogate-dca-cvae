@@ -17,4 +17,4 @@ from src.models import load_weights
 net, metadata = load_weights('MS', seed=42, device='cpu')
 ```
 
-MS-main and MS-aux use the same MS checkpoint. Inference uses posterior means. The original selection ran 400 epochs and chose the saved epoch with the smallest validation cross-window MSE, using MS-aux to select MS. These are not the earlier five-checkpoint project models.
+MS-main and MS-aux use the same MS checkpoint. Inference uses posterior means. Each manuscript run used 400 epochs and chose the saved epoch with the smallest source-weighted validation prediction MSE, using MS-aux to select MS. The selected epoch ranges are M: 380–400; S: 220–400; S-Y: 300–370; MS: 320–380, matching the manuscript's Matched ablations and neural development section.

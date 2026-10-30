@@ -87,8 +87,8 @@ class CVAE(nn.Module):
 
 class AuxVAE(nn.Module):
     """
-    辅助分支 VAE：输入 12 维 TFA 阶跃响应，潜空间 z_dim 必须与主 CVAE 一致
-    论文 §5.3.1: 第 1/2 隐藏层 50，第 3 层 100
+    辅助分支 VAE：输入 12 维 FIR 阶跃响应，潜空间 z_dim 必须与主 CVAE 一致
+    Manuscript Methods, Architecture and training objective: hidden widths 50, 50, 100.
     """
     def __init__(self, s_dim: int = 12, hidden: tuple = (50, 50, 100), z_dim: int = 30, epsilon_scale: float = 1.0):
         super().__init__()

@@ -1,0 +1,64 @@
+{
+  "status": "PASS",
+  "date": "2026-10-30",
+  "manuscript_sha256": "fa9f132e35beca615092315e770cb6bb614e2b8d85f2defc9dcf02a240af8de1",
+  "checks": {
+    "manuscript_tables": {
+      "status": "PASS",
+      "table1_rows": 6,
+      "table2_rows": 5,
+      "all_AUC_and_CI_values_match": true,
+      "all_prediction_MSE_and_seed_SD_values_match": true
+    },
+    "README_demo_figures_removed": true,
+    "weights_and_example_arrays_unchanged": true,
+    "architectures_and_selection_match_manuscript": true,
+    "clinical_side_policy_guard": "PASS",
+    "FIR_features_against_full_archive": {
+      "status": "PASS",
+      "people": 139,
+      "max_abs_difference": 2.842170943040401e-14
+    },
+    "clinical_evaluation_using_archived_features": {
+      "status": "PASS",
+      "people": 139,
+      "designs": 44,
+      "all_AUC_CI_and_Holm_match": true,
+      "primary_98333_intervals_match": true,
+      "inference": "archived per-person features; no full clinical neural inference rerun"
+    },
+    "real_window_classification_CLI": {
+      "status": "PASS",
+      "people": 6,
+      "seed": 42,
+      "scope": "execution check only"
+    },
+    "surrogate_evaluation": {
+      "status": "PASS",
+      "all_20_models_evaluated": true,
+      "existing_MSE_and_CI_unchanged": true,
+      "primary_95_and_98333_intervals": true,
+      "seed_SD_available": true,
+      "same_window_and_137_person_headline_values_match": true
+    }
+  },
+  "unchanged": "Neural weights, demonstration arrays, full-study reference values and manuscript DOCX",
+  "scope": "Repository/manuscript consistency; not a new peer review, citation audit or full 400-epoch replication",
+  "source_code_sha256": {
+    "src/__init__.py": "9cc95cc9c6ec4d8c1c29006e7dabeb929d10706f2abee80d6aafecd2bf508249",
+    "src/_io.py": "b05e1a682f8178ddb608f19079e7ef2c350731513179c91f6d70738d9b039bcd",
+    "src/classification.py": "1a09b0bba1a712cd3f813acf708ce2c68678bf44f8ad73f08f8c0b53a81869b6",
+    "src/fir.py": "02947aa1e0b903eff5843d638c9148009059e78521e32d2c8b41c5b615d51938",
+    "src/losses.py": "5c525d7fd7160c800dea837b4bad78b5ebc88420397c94349f204ee82159437a",
+    "src/models.py": "9d8c25ffd63ebe7143e97506255bcd0fdef77210bcfe68d3091d239f13045d72",
+    "src/preprocessing.py": "e48ac74bbb22f51697e724fae74967070f6672a6ff0218b1af8277e3f3114f84",
+    "src/reconstruction.py": "1c9ba625f1e1f85d56746654cc66cc413124b30e6cc1255e6e302fb1aae6f6d5",
+    "src/statistics.py": "7d991c6b54c01643ac41786cc09baee68adee28268fdd7e5c6ef67aa90eb26bf",
+    "src/tfa.py": "c1e1ceb78ac063d6de1e3a3bbb94b8b09aa9fd627427cdb5dfa48d333cf543ef",
+    "scripts/download_weights.py": "efaa7ac6fc7d5d88f4600c4effd14893df67f917af750c3f78a27cbf97ffe734",
+    "scripts/evaluate.py": "5b155b2bb0a15cd13447803b9fc3b8525635be2a9ef6c69ef985f85ae99fccdf",
+    "scripts/plot_results.py": "9bb3c00e8c6e4fdae83a3898d5716f57481ce3d614249cfbad7b33776db546df",
+    "scripts/run_demo.py": "f604feba9e774c6460693195e556abe5278bff6d6990ce6ef86cc2a52782167f",
+    "scripts/train_models.py": "ba9780af2bb5feddf36f3465d431dcce09d4c2ea00ea2bbad34391eaebda3e11"
+  }
+}

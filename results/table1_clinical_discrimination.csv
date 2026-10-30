@@ -1,0 +1,7 @@
+method,design,feature_set,n_features,AUC,CI95_low,CI95_high,people
+Spectral TFA,T_GPC9,GPC9,9,0.9145,0.8596,0.9600,139
+Spectral TFA,T_GP6,GP6,6,0.8863,0.8250,0.9393,139
+Window-wise FIR,F_GP6,GP6,6,0.9316,0.8807,0.9712,139
+Joint (step latent),MS-aux_GP6,GP6,6,0.9515,0.9111,0.9832,139
+Spectral TFA,T_G3,G3,3,0.7691,0.6862,0.8461,139
+Joint (step latent),MS-aux_G3,G3,3,0.9499,0.9091,0.9818,139
