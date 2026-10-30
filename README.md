@@ -13,7 +13,7 @@ The study uses recorded arterial blood pressure (ABP) to drive the Tiecks simula
 | Step VAE + waveform decoder | `S-Y` | 204,072 | Step latent |
 | Joint CVAE–Step VAE | `MS` | 362,432 | `MS-main`: waveform latent; `MS-aux`: step latent |
 
-All four configurations use seeds 42–46, giving 20 separately trained models. The two joint-model routes share the same MS weights. The full surrogate dataset contains 39,370 pressure windows and 393,700 ABP–CBFV pairs, split 70%/15%/15% by source record. The clinical classification cohort contains 68 controls and 71 patients with stroke, with all windows, sides and visits of a participant held out together. Neural weights remain frozen; the downstream classifier uses clinical labels within each training fold.
+All four configurations use seeds 42–46, giving 20 separately trained models. The two joint-model routes share the same MS weights. The full surrogate dataset contains 39,370 pressure windows and 393,700 ABP–CBFV pairs, split 70%/15%/15% by source record. This repository's clinical results use the manuscript's **139-participant cohort: 68 controls and 71 patients with stroke**, with all windows, sides and visits of a participant held out together. Neural weights remain frozen; the downstream classifier uses clinical labels within each training fold.
 
 ## Included data
 
@@ -62,7 +62,7 @@ python scripts/evaluate.py --task classification --data data/private/jlu_full.np
 
 `train_models.py` defaults to 400 epochs, four configurations, and seeds 42–46. Checkpoint selection uses validation cross-window relative MSE on samples 11:100; the earlier saved epoch wins exact ties. There is no early stopping in this release's four-configuration protocol. Training on the example subset cannot reproduce results from the full dataset. The supplied weights are the original selected model tensors, repackaged without optimizer history.
 
-The classification command includes spectral TFA, directly fitted FIR and the selected neural configurations. GP6 supports the main comparisons; gain-only, phase-only, band-specific and feature-fusion analyses are marked exploratory. See [reproduction scope](docs/reproduction_scope.md) for the mapping between commands and manuscript analyses, including the separate 137-person prediction task.
+The classification command includes spectral TFA, directly fitted FIR and the selected neural configurations. GP6 supports the main comparisons; gain-only, phase-only, band-specific and feature-fusion analyses are marked exploratory. See [reproduction scope](docs/reproduction_scope.md) for the commands covering the 139-participant clinical analysis and the surrogate experiments.
 
 ## Layout
 
@@ -86,7 +86,7 @@ generate_surrogate(100, '/path/to/source_abp', '/path/to/generated_output')
 
 ## Reference results and interpretation
 
-The following full-cohort clinical results are from manuscript Tables 1 and 2. GP6 contains gain and phase in three frequency bands; GPC9 additionally contains coherence.
+The following clinical results use all **139 participants** and are from manuscript Tables 1 and 2. GP6 contains gain and phase in three frequency bands; GPC9 additionally contains coherence.
 
 | Method | Features | AUC | 95% CI |
 |---|---|---:|---|
@@ -101,15 +101,14 @@ The following full-cohort clinical results are from manuscript Tables 1 and 2. G
 
 Joint (step latent) exceeded Waveform CVAE, while superiority to conventional TFA or Step VAE + waveform decoder was not established. Against TFA GPC9, the paired AUC difference was 0.0371 (95% CI, −0.0193 to 0.0978; Holm-adjusted p = 0.3678).
 
-The waveform experiments use different evaluation populations:
+The surrogate waveform experiments use the following test sets:
 
 | Experiment | Full evaluation set | Joint (step latent) MSE | Spectral TFA MSE |
 |---|---|---:|---:|
 | Surrogate same-window reconstruction | 59,080 pairs from 1,067 test sources | 22.009 × 10⁻⁶ | Not the independent-window TFA comparison |
 | Surrogate independent-window prediction | 3,540 ARI-specific targets from 354 test sources | 9.810 × 10⁻⁶ | 7.687 × 10⁻⁶ |
-| Supplementary measured-CBFV prediction | 137 participants | 0.004534 | 0.004316 |
 
-Prediction MSE averages the five models' errors, with equal source or participant weighting. The study found no CBFV-prediction error advantage over TFA. Clinical AUC and waveform MSE assess different outcomes.
+Surrogate prediction MSE averages the five models' errors, with equal source-record weighting. The surrogate prediction experiment found no error advantage over TFA. Clinical AUC and surrogate waveform MSE assess different outcomes.
 
 Full reference tables are in [results/](results/README.md), including machine-readable versions of manuscript Tables 1 and 2. These are archived full-experiment results; the small included datasets are for running examples.
 
@@ -125,4 +124,4 @@ Code is released under the [MIT License](LICENSE), selected by the author for th
 
 ## 中文快速说明
 
-本仓库按论文的方法、比较设置和结果组织。包含模拟数据 **2.95%**、JLU 正常人和卒中患者**各一人**、四配置五种子的 **20 个正式权重**。论文的139人临床分类、模拟数据预测和137人实测血流预测是不同任务，结果分别列明。完整真实数据请联系 **hx.yang2@siat.ac.cn**。
+本仓库以论文的 **139人临床队列（68名正常人、71名卒中患者）** 及模拟实验为依据。包含模拟数据 **2.95%**、JLU 正常人和卒中患者**各一人**、四配置五种子的 **20 个正式权重**。临床参考结果均采用139人队列；两人示例用于运行演示。完整真实数据请联系 **hx.yang2@siat.ac.cn**。

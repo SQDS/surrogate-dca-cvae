@@ -170,7 +170,7 @@
     "Model inference uses the frozen train-only scaler from configs/models.json.",
     "The two-person JLU demo supports reconstruction and TFA, not AUC estimation.",
     "Clinical input is already preprocessed: the NPZ loader does not perform raw-record cross-correlation alignment, detrending or resampling.",
-    "Clinical classification uses complete-record relative means; surrogate generation uses each raw 125-Hz window mean. The supplementary measured-CBFV prediction task instead uses reference-interval means only."
+    "Clinical classification uses complete-record relative means; surrogate generation uses each raw 125-Hz window mean."
   ],
   "data_access_contact": "hx.yang2@siat.ac.cn"
 }

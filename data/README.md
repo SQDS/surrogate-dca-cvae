@@ -16,7 +16,7 @@ The `step` arrays are the archived FIR-derived inputs associated with the select
 
 Clinical classification uses complete-record means for relative normalization; surrogate generation uses each 125-Hz pressure window's mean. Both subsequently use the frozen surrogate-training global means and SDs. The clinical loader expects signals after the manuscript's raw-record alignment, detrending, filtering and resampling; it does not perform those preceding steps. Controls must include both sides per record, while stroke records must contain only the symptom-ipsilateral side. For repeated visits, retain one shared `person_ids` value and separate `record_ids` values.
 
-The manuscript's 137-person supplementary measured-CBFV prediction task uses a separate reference-only preprocessing protocol. Its raw recordings and preparation pipeline are not supplied by these preprocessed two-person examples; see [reproduction scope](../docs/reproduction_scope.md).
+Clinical reference results use the complete 139-participant cohort (68 controls, 71 stroke). The two-person examples demonstrate the data format and frozen inference; see [reproduction scope](../docs/reproduction_scope.md).
 
 The original surrogate construction used recorded ABP to drive Tiecks ARI 0–9 simulations. Source ABP is from Kachuee et al., [Cuff-Less Blood Pressure Estimation, UCI Machine Learning Repository](https://archive.ics.uci.edu/dataset/340/cuff), DOI 10.24432/C5B602 (manuscript reference 23). UCI provides the source `Part_*.mat` files and identifies their license as CC BY 4.0. The generated surrogate pairs are derived from those pressure recordings; the repository's MIT software license does not replace the source-data attribution.
 

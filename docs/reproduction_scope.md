@@ -1,6 +1,6 @@
 # Reproduction scope
 
-This repository follows the author-supplied manuscript **Toward Digital Twin–Enabled Assessment of Dynamic Cerebral Autoregulation: Learning From Surrogate Pressure–Flow Data**. The public examples are deliberately smaller than the full study datasets.
+This repository covers the **139-participant clinical cohort (68 controls, 71 stroke)** and the surrogate experiments in the author-supplied manuscript **Toward Digital Twin–Enabled Assessment of Dynamic Cerebral Autoregulation: Learning From Surrogate Pressure–Flow Data**. The public examples are deliberately smaller than those full study datasets.
 
 | Manuscript analysis | Full-study population | Repository support |
 |---|---|---|
@@ -8,10 +8,7 @@ This repository follows the author-supplied manuscript **Toward Digital Twin–E
 | Stroke/control discrimination, Tables 1 and 2 | 139 participants: 68 controls, 71 stroke; 140 recordings | `evaluate.py --task classification`; full clinical windows needed; directly fitted FIR and spectral TFA comparators included |
 | Same-window surrogate reconstruction | 59,080 pairs from 1,067 test sources | `evaluate.py --task reconstruction`, `scope=same` |
 | Independent-window surrogate prediction, Table 2 | 354 test sources and 3,540 ARI-specific targets | Same command, `scope=cross`; five reference windows spanning 0–300 s, a 50-s gap, and target ABP at 350–450 s |
-| Supplementary measured-CBFV prediction | 137 participants | Archived aggregate results in `results/clinical_prediction_summary.csv`; this separate raw-record pipeline is not implemented by the public evaluation command |
 | Latent ARI analyses, excitation analyses and other supplemental sensitivity analyses | Analysis-specific source sets | Not exposed by the example CLI; the available reference tables do not imply full supplemental reproduction |
-
-The 137-person prediction task uses a 150-s reference interval and a separate 200–300-s target interval. Its normalization uses reference-interval means only, with reference and target segments filtered independently and no full-record alignment. It must not reuse the full-record transforms used for the 139-person classification task. The two excluded prediction participants lacked a complete prescribed target interval; they remain in the classification cohort.
 
 ## Preprocessed clinical inputs
 
@@ -23,7 +20,6 @@ Relative normalization differs by task:
 
 - Surrogate generation: each raw 125-Hz ABP window's mean.
 - Clinical classification: complete-record means, followed by the documented signal processing and frozen training-set standardization.
-- Supplementary measured-CBFV prediction: reference-interval means, with target CBFV reserved for scoring.
 
 ## Evaluation and statistics
 

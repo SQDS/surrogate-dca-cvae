@@ -155,32 +155,6 @@
     "AUC_significance": "two-sided Holm p<.05 within declared family",
     "missing_comparison": "retain planned family size; uncomputable p remains NA"
   },
-  "phase2": {
-    "calibration": [
-      0,
-      150
-    ],
-    "target": [
-      200,
-      300
-    ],
-    "shift": 0,
-    "normalization": "calibration means only",
-    "detrend": "no full-record or target-fitted detrend",
-    "lowpass_hz": 0.5,
-    "filter_order": 3,
-    "fs_raw": 100,
-    "fs_target": 1,
-    "filter_segments": "calibration and target independently",
-    "score_slice": [
-      11,
-      100
-    ],
-    "reuse_selected_checkpoints": true,
-    "people": 137,
-    "scope": "supplementary measured-CBFV prediction; separate raw-data preparation from the 139-person classification task",
-    "availability": "archived aggregate results included; raw clinical prediction pipeline is not exposed by scripts/evaluate.py"
-  },
   "tfa": {
     "protocol_id": "ablation_v2_per_window_mu_coherence_no_offset",
     "fs": 1.0,

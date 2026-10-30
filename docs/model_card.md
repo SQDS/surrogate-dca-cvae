@@ -19,7 +19,7 @@ The objective combines available direct waveform/step MSE terms, 0.5 times avail
 
 Train-only global normalization parameters are frozen in `configs/models.json`. Same-window reconstruction is conditioned on the observed window and is distinct from prediction. Cross-window inference encodes calibration windows, conditions the decoder on target ABP, and averages decoded predictions; target CBFV is used only for scoring. Waveform scores use indices 11:100 so FIR startup samples are excluded.
 
-The clinical classification task contains 139 people (68 controls, 71 stroke), whereas the supplementary measured-CBFV prediction task contains 137. Classification inputs use complete-record relative normalization and the manuscript's preceding alignment/filtering pipeline. The supplementary prediction task uses reference-only normalization and separately filtered time intervals. The public NPZ loader expects already preprocessed inputs; see [reproduction scope](reproduction_scope.md).
+The clinical analysis uses the manuscript's 139-participant cohort (68 controls, 71 stroke). Classification inputs use complete-record relative normalization and the manuscript's preceding alignment/filtering pipeline. The public NPZ loader expects already preprocessed inputs; see [reproduction scope](reproduction_scope.md).
 
 For clinical TFA, each observation window is encoded independently. Five overlapping 100-second windows from a 300-second sinusoidal probe are decoded at each frequency from 0.02 to 0.50 Hz. Their spectra are averaged before computing gain, phase and coherence. Window curves are then aggregated by side, visit and person. Phase averaging is circular. Conventional TFA averages measured-window spectra within a side. The Nyquist probe uses the archived RMS-matched cosine policy. Invalid coherence is retained as missing, with no additive denominator offset.
 
@@ -33,7 +33,7 @@ The principal neural features are three band-specific gains and phases (GP6); co
 
 The release's two JLU examples were deliberately selected for favorable reconstruction. Their correlations and plots describe those examples only. They cannot reproduce clinical AUC or the full cohort confidence intervals. Full reference results are separately identified in `results/`.
 
-The manuscript supports surrogate-based neural development and clinical discrimination without neural fine-tuning. It does not establish superiority to conventional TFA or Step VAE + waveform decoder, and it reports no CBFV-prediction error advantage over TFA. Its clinical evaluation uses a single age/sex-imbalanced cohort and no demographic adjustment; stroke/control discrimination is an indirect assessment of dCA.
+The manuscript supports surrogate-based neural development and clinical discrimination without neural fine-tuning. The 139-participant analysis does not establish superiority to conventional TFA or Step VAE + waveform decoder. The surrogate prediction results show no error advantage over TFA. The clinical evaluation uses a single age/sex-imbalanced cohort and no demographic adjustment; stroke/control discrimination is an indirect assessment of dCA.
 
 ## Provenance
 

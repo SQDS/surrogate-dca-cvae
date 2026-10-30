@@ -39,7 +39,7 @@
       "existing_MSE_and_CI_unchanged": true,
       "primary_95_and_98333_intervals": true,
       "seed_SD_available": true,
-      "same_window_and_137_person_headline_values_match": true
+      "same_window_headline_value_matches": true
     }
   },
   "unchanged": "Neural weights, demonstration arrays, full-study reference values and manuscript DOCX",
@@ -60,5 +60,6 @@
     "scripts/plot_results.py": "9bb3c00e8c6e4fdae83a3898d5716f57481ce3d614249cfbad7b33776db546df",
     "scripts/run_demo.py": "f604feba9e774c6460693195e556abe5278bff6d6990ce6ef86cc2a52782167f",
     "scripts/train_models.py": "ba9780af2bb5feddf36f3465d431dcce09d4c2ea00ea2bbad34391eaebda3e11"
-  }
+  },
+  "release_scope": "139-participant clinical cohort (68 controls, 71 stroke) and surrogate experiments"
 }
